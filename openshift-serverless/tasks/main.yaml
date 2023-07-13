@@ -1,0 +1,22 @@
+---
+- name: Create knative serving
+  kubernetes.core.k8s:
+    name: knative-serving
+    namespace: knative-serving
+    api_version: operator.knative.dev/v1beta1
+    kind: KnativeServing
+    definition:
+      metadata:
+        labels:
+          opdev: opcap
+    state: present
+- name: Get Conditions - Must be Ready and True
+  kubernetes.core.k8s_info:
+    namespace: knative-serving
+    name: knative-serving
+    api_version: operator.knative.dev/v1beta1
+    kind: knative-serving
+  register: knative-serving
+  # until: subscription.resources[0].status.currentCSV is defined
+  # retries: 10
+  # delay: 10
